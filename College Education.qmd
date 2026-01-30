@@ -5,4 +5,34 @@ format: pdf
 editor: visual
 ---
 
-## 
+## Problem 2 (Stockton)
+
+```{r}
+
+```
+
+**Answers:**
+
+## Problem 3 (Cooper)
+
+```{r}
+
+```
+
+**Answers:**
+
+## Problem 4 (Stockton)
+
+```{r}
+
+```
+
+**Answers:**
+
+## Problem 5 (Cooper)
+
+```{r}
+
+```
+
+**Answers:**
