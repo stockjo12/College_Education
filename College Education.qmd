@@ -5,6 +5,17 @@ format: pdf
 editor: visual
 ---
 
+```{r}
+library(vroom)
+library(tidyverse)
+```
+
+```{r}
+salary <- vroom("Salary.csv")
+
+sal_lm <- lm(Salary ~ ., data = salary)
+```
+
 ## Problem 2 (Stockton)
 
 ```{r}
