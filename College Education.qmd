@@ -1,0 +1,8 @@
+---
+title: "College Education"
+author: "Cooper Riggs & Stockton Nelson"
+format: pdf
+editor: visual
+---
+
+## 
