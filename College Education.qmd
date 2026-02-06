@@ -12,7 +12,9 @@ editor: visual
 library(tidyverse)
 
 #Bringing in Data
-salary <- vroom::vroom("Salary.csv")
+salary <- vroom::vroom("Salary.csv") |>
+  janitor::clean_names() |>
+  rename(major = major_category)
 ```
 
 ## Problem 2 (Stockton)
@@ -20,18 +22,48 @@ salary <- vroom::vroom("Salary.csv")
 ### Impact of GPA on Salary
 
 ```{r}
+#Running Linear Model with GPA 
+lmgpa <- lm(salary ~ gpa, data = salary)
 
+#Running Confidence Interval on GPA
+confint(lmgpa, "gpa", level = 0.95)
 ```
 
-**Answer:**
+```{r}
+#Making Scatterplot of GPA and Salary
+ggplot(data = salary, mapping = aes(x = gpa, y = salary)) +
+  geom_point(color = "darkgreen", alpha = 0.8) +
+  geom_smooth(method = lm, se = T, color = "forestgreen", fill = "palegreen") +
+  scale_x_continuous(breaks = c(1.5, 2.0, 2.5, 3.0, 3.5, 4.0), 
+                     labels = function(x) sprintf("%.1f", x)) +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  labs(x = "GPA",
+       y = "Salary",
+       title = "The Effect of GPA on Salary",
+       caption = "Figure 1: Relationship between GPA and Salary for college students.") +
+  theme(plot.caption = element_text(hjust = 0))
+
+ggsave("GPA_salary_plot.png", width = 8, height = 6, dpi = 300)
+```
+
+**Answer:** A greater GPA has a positive impact on your salary. For every one point your GPA goes up, we expect your salary to go up somewhere between \$3,300 and \$6,300 dollars. While there is a positive impact on your salary, I do believe that GPA does positively increase your salary, I believe that this can mainly be explained by students with higher GPAs have a greater opportunity in what internships and graduate schools they are able to attend.
 
 ### Impact of GPA across Majors
 
 ```{r}
+#Running Linear Model with GPA and Major Interaction
+lmgm <- lm(salary ~ gpa * major, data = salary)
 
+#Running Confidence Interval on GPA
+fit <- lm(salary ~ gpa * major, data = salary)
+confint(fit, level = 0.95)
+
+salary |> 
+  group_by(major) |> 
+  summarize(n = n())
 ```
 
-**Answer:**
+**Answer:** Looking at the 95% confidence interval for each of these interactions, it's safe to conclude that the effect for GPA is the same, regardless of your major. This could be due to the small sample sizes for each major, but with what data we got, all of these confidence intervals return intervals that contain 0, thus showing that there isn't an interaction.
 
 ## Problem 3 (Cooper)
 
