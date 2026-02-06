@@ -5,26 +5,37 @@ format: pdf
 editor: visual
 ---
 
+## Setup
+
 ```{r}
-library(vroom)
+#Downloading Libraries
 library(tidyverse)
-```
 
-```{r}
-salary <- vroom("Salary.csv")
-
-sal_lm <- lm(Salary ~ ., data = salary)
+#Bringing in Data
+salary <- vroom::vroom("Salary.csv")
 ```
 
 ## Problem 2 (Stockton)
 
+### Impact of GPA on Salary
+
 ```{r}
 
 ```
 
-**Answers:**
+**Answer:**
+
+### Impact of GPA across Majors
+
+```{r}
+
+```
+
+**Answer:**
 
 ## Problem 3 (Cooper)
+
+### Differences in Salary Across Major
 
 ```{r}
 
@@ -34,6 +45,8 @@ sal_lm <- lm(Salary ~ ., data = salary)
 
 ## Problem 4 (Stockton)
 
+### Differences in Salary Across Sex
+
 ```{r}
 
 ```
@@ -41,6 +54,8 @@ sal_lm <- lm(Salary ~ ., data = salary)
 **Answers:**
 
 ## Problem 5 (Cooper)
+
+### How Well do the Variables Explain Salary
 
 ```{r}
 
