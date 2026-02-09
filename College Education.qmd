@@ -70,7 +70,9 @@ salary |>
 ### Differences in Salary Across Major
 
 ```{r}
-
+sal_lm <- lm(salary ~ gpa + sex + major, data = salary)
+summary(sal_lm)
+anova(sal_lm)
 ```
 
 **Answers:**
