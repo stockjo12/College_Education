@@ -71,11 +71,26 @@ salary |>
 
 ```{r}
 sal_lm <- lm(salary ~ gpa + sex + major, data = salary)
-summary(sal_lm)
 anova(sal_lm)
 ```
 
+```{r}
+library(emmeans)
+
+major_means <- emmeans(sal_lm, ~ major)
+confint(major_means)
+```
+
+```{r}
+plot(major_means,
+     ylab = "Major Category",
+     xlab = "Adjusted Mean Salary")
+ggsave("major_salary_plot.png", width = 8, height = 6, dpi = 300)
+```
+
 **Answers:**
+
+Through running an F-test on the the linear model (Salary \~ GPA + Sex + Major) we get an extremely low p-value for major, suggesting that there is sufficient evidence to reject the null hypothesis. This means that there is a difference in salaries across majors. Through further inspection by taking the adjusted means of salaries for each major category we find that Engineering majors have a significantly higher salary. Other majors with higher salaries include Computers & Mathematics, Physical Sciences, Business, and Health.
 
 ## Problem 4 (Stockton)
 
@@ -92,7 +107,48 @@ anova(sal_lm)
 ### How Well do the Variables Explain Salary
 
 ```{r}
+set.seed(123)
 
+cross_validate <- function(fold_num) {
+  
+  train_data <- salary[folds != fold_num, ]
+  test_data  <- salary[folds == fold_num, ]
+  
+  fit <- lm(
+    salary ~ gpa + sex + major,
+    data = train_data
+  )
+  
+  preds <- predict(fit, newdata = test_data)
+  
+  rmse <- sqrt(mean((test_data$salary - preds)^2))
+  
+  return(rmse)
+}
+
+K <- 20
+
+folds <- rep(1:K, length = nrow(salary)) %>%
+  sample()
+
+rmse_results <- lapply(1:K, FUN = cross_validate) %>%
+  unlist()
+mean(rmse_results)
+```
+
+```{r}
+fold_num <- 3
+train_data <- salary[folds != fold_num, ]
+test_data  <- salary[folds == fold_num, ]
+fit <- lm(salary ~ gpa + sex + major, data = train_data)
+example <- test_data[1, ]
+example
+predicted_salary <- predict(fit, newdata = example)
+actual_salary <- example$salary
+error <- actual_salary - predicted_salary
+print(c(actual_salary, predicted_salary, error))
 ```
 
 **Answers:**
+
+The variables in the data set do a pretty good job at predicting salary. After RMSE cross-validation, the mean RMSE across the folds is 5717.57. This means that on average, the model can predict a given person's salary with an error of about \$5,717.57. That's okay for predicting, but definitely not great. A couple of factors that are missing that we believe would also contribute to salary are degree level and location of the job. Adding these factors would likely lower the average RMSE. A specific example that shows how this model performs is if you had a female that majored in Communication and Journalism with a 2.79 GPA and a salary of \$84,200. The model would predict someone with these characteristics to have a salary of \$76,512.96, this is off by \$7,687.03. We would say that the difference between \$84,200 and \$76,512 in salary is fairly significant.
