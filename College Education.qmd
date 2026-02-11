@@ -134,7 +134,7 @@ salary |>
 ```{r}
 # Fit linear model to evaluate effect of major on salary
 # Model includes GPA and Sex as controls
-sal_lm <- lm(Salary ~ GPA + Sex + MajorCategory, data = salary)
+sal_lm <- lm(salary ~ gpa + sex + major, data = salary)
 
 # Perform overall F-test to determine whether Major contributes significantly to predicting Salary
 anova(sal_lm)
@@ -146,40 +146,17 @@ library(emmeans)
 
 # Compute adjusted mean salary for each major category
 # GPA and Sex are held constant for fair comparison
-major_means <- emmeans(sal_lm, ~ MajorCategory)
+major_means <- emmeans(sal_lm, ~ major)
 
 # Obtain 95% confidence intervals for adjusted means
 confint(major_means)
 ```
 
 ```{r}
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 plot(major_means,
      ylab = "Major Category",
      xlab = "Adjusted Mean Salary")
 
-=======
-=======
->>>>>>> 63527dc1b52b06355bc02f9d28921d863a6a88fc
-=======
->>>>>>> 63527dc1b52b06355bc02f9d28921d863a6a88fc
-# Plot adjusted mean salaries with confidence intervals
-# This visually compares expected salary across majors
-plot(
-  major_means,
-  ylab = "Major Category",
-  xlab = "Adjusted Mean Salary"
-)
-# Save plot for inclusion in article
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 63527dc1b52b06355bc02f9d28921d863a6a88fc
-=======
->>>>>>> 63527dc1b52b06355bc02f9d28921d863a6a88fc
-=======
->>>>>>> 63527dc1b52b06355bc02f9d28921d863a6a88fc
 ggsave("major_salary_plot.png", width = 8, height = 6, dpi = 300)
 ```
 
