@@ -132,21 +132,35 @@ salary |>
 ### Differences in Salary Across Major
 
 ```{r}
-sal_lm <- lm(salary ~ gpa + sex + major, data = salary)
+# Fit linear model to evaluate effect of major on salary
+# Model includes GPA and Sex as controls
+sal_lm <- lm(Salary ~ GPA + Sex + MajorCategory, data = salary)
+
+# Perform overall F-test to determine whether Major contributes significantly to predicting Salary
 anova(sal_lm)
 ```
 
 ```{r}
+# Load emmeans package to compute adjusted (marginal) means
 library(emmeans)
 
-major_means <- emmeans(sal_lm, ~ major)
+# Compute adjusted mean salary for each major category
+# GPA and Sex are held constant for fair comparison
+major_means <- emmeans(sal_lm, ~ MajorCategory)
+
+# Obtain 95% confidence intervals for adjusted means
 confint(major_means)
 ```
 
 ```{r}
-plot(major_means,
-     ylab = "Major Category",
-     xlab = "Adjusted Mean Salary")
+# Plot adjusted mean salaries with confidence intervals
+# This visually compares expected salary across majors
+plot(
+  major_means,
+  ylab = "Major Category",
+  xlab = "Adjusted Mean Salary"
+)
+# Save plot for inclusion in article
 ggsave("major_salary_plot.png", width = 8, height = 6, dpi = 300)
 ```
 
@@ -211,45 +225,66 @@ ggsave("Gender_Pay_Gap.png", width = 8, height = 6, dpi = 300)
 ### How Well do the Variables Explain Salary
 
 ```{r}
+# Set seed for reproducibility so fold assignment is consistent
 set.seed(123)
 
+# Function to compute RMSE for a given fold
 cross_validate <- function(fold_num) {
   
+  # Split data into training and testing sets
   train_data <- salary[folds != fold_num, ]
   test_data  <- salary[folds == fold_num, ]
   
+  # Fit linear model on training data only
   fit <- lm(
     salary ~ gpa + sex + major,
     data = train_data
   )
-  
+  # Generate predictions for test data
   preds <- predict(fit, newdata = test_data)
   
+  # Compute RMSE for this fold
   rmse <- sqrt(mean((test_data$salary - preds)^2))
   
   return(rmse)
 }
 
+# Define number of folds for cross-validation
 K <- 20
 
+# Randomly assign each observation to one of K folds
 folds <- rep(1:K, length = nrow(salary)) %>%
   sample()
 
+# Apply cross-validation across all folds
 rmse_results <- lapply(1:K, FUN = cross_validate) %>%
   unlist()
+# Compute average RMSE across folds
 mean(rmse_results)
 ```
 
 ```{r}
+# Select one fold to demonstrate an out-of-sample prediction
 fold_num <- 3
+
+# Recreate training and testing split for that fold
 train_data <- salary[folds != fold_num, ]
 test_data  <- salary[folds == fold_num, ]
-fit <- lm(salary ~ gpa + sex + major, data = train_data)
+
+# Fit model using training data only
+fit <- lm(Salary ~ GPA + Sex + MajorCategory, data = train_data)
+
+# Select one observation from the test set
 example <- test_data[1, ]
-example
+
+# Generate prediction for this observation
 predicted_salary <- predict(fit, newdata = example)
-actual_salary <- example$salary
+
+# Extract actual salary and compute prediction error
+actual_salary <- example$Salary
 error <- actual_salary - predicted_salary
+
+# Display actual value, predicted value, and error
 print(c(actual_salary, predicted_salary, error))
 ```
 
