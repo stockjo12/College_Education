@@ -73,7 +73,7 @@ lmtest::bptest(glm)
 
 **Answer:** Looking at the Fitted Vs Residuals Plot, we aren't concerned about equal variance being an issue. Looking at a BP test as well, we feel good about assuming equal variance.
 
-## Problem 2 (Stockton)
+## Problem 2
 
 ### Impact of GPA on Salary
 
@@ -102,12 +102,6 @@ ggplot(data = salary, mapping = aes(x = gpa, y = salary)) +
 ggsave("GPA_salary_plot.png", width = 8, height = 6, dpi = 300)
 ```
 
-```{r}
-#Calculating the Sample Size in Each Major
-salary |>
-  count(major)
-```
-
 **Answer:** A greater GPA has a positive impact on your salary. For every one point your GPA goes up, we expect your salary to go up somewhere between \$3,300 and \$6,300 dollars. While there is a positive impact on your salary, I do believe that GPA does positively increase your salary, I believe that this can mainly be explained by students with higher GPAs have a greater opportunity in what internships and graduate schools they are able to attend.
 
 ### Impact of GPA across Majors
@@ -127,7 +121,7 @@ salary |>
 
 **Answer:** Looking at the 95% confidence interval for each of these interactions, it's safe to conclude that the effect for GPA is the same, regardless of your major. This could be due to the small sample sizes for each major, but with what data we got, all of these confidence intervals return intervals that contain 0, thus showing that there isn't an interaction.
 
-## Problem 3 (Cooper)
+## Problem 3
 
 ### Differences in Salary Across Major
 
@@ -164,7 +158,7 @@ ggsave("major_salary_plot.png", width = 8, height = 6, dpi = 300)
 
 Through running an F-test on the the linear model (Salary \~ GPA + Sex + Major) we get an extremely low p-value for major, suggesting that there is sufficient evidence to reject the null hypothesis. This means that there is a difference in salaries across majors. Through further inspection by taking the adjusted means of salaries for each major category we find that Engineering majors have a significantly higher salary. Other majors with higher salaries include Computers & Mathematics, Physical Sciences, Business, and Health.
 
-## Problem 4 (Stockton)
+## Problem 4
 
 ### Differences in Salary Across Sex
 
@@ -216,7 +210,7 @@ ggsave("Gender_Pay_Gap.png", width = 8, height = 6, dpi = 300)
 
 **Answers:** There is a difference between the earnings for males and females between college major. There are some majors where there is no difference, but there are also some majors where there's a stark difference and males earn most of the income.
 
-## Problem 5 (Cooper)
+## Problem 5
 
 ### How Well do the Variables Explain Salary
 
