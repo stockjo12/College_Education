@@ -268,7 +268,7 @@ train_data <- salary[folds != fold_num, ]
 test_data  <- salary[folds == fold_num, ]
 
 # Fit model using training data only
-fit <- lm(Salary ~ GPA + Sex + MajorCategory, data = train_data)
+fit <- lm(salary ~ gpa + sex + major, data = train_data)
 
 # Select one observation from the test set
 example <- test_data[1, ]
@@ -277,7 +277,7 @@ example <- test_data[1, ]
 predicted_salary <- predict(fit, newdata = example)
 
 # Extract actual salary and compute prediction error
-actual_salary <- example$Salary
+actual_salary <- example$salary
 error <- actual_salary - predicted_salary
 
 # Display actual value, predicted value, and error
